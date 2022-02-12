@@ -1,0 +1,66 @@
+
+*{
+    margin: 0;
+    padding: 0;
+}
+body{
+    background-color: #64B5F6;
+}
+.contenedor{
+    width: 90%;
+	max-width: 1000px;
+	margin: 20px auto;
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: repeat(3,1fr);
+    grid-template-rows: repeat(6,1fr);
+    grid-template-areas: "aside aside aside "
+                         "contenido contenido contenido"
+                         "contenido contenido contenido"
+                         "contenido contenido contenido"
+                         "contenido contenido contenido"
+                         "footer footer footer";
+}
+.aside >div{
+    display: inline-block;
+    padding: 20px;
+    margin: 10px;
+}
+.aside >div >button{
+    background-color: #0D47A1;
+    color: white;
+    height: 30px;
+    width: 100px;
+}
+.aside >div  >input{
+    height: 30px;
+    padding: 5px;
+}
+.contenido >canvas{
+    display: flex;
+    justify-content: center;
+    min-width: 30px;
+}
+
+
+.contenido{
+    grid-area:contenido ;
+}
+.aside{
+    grid-area:aside;
+    background-color: #1565C0;
+}
+.footer{
+    grid-area:footer ;
+    background-color: #1565C0;
+    color: white;
+    display: flex;
+    font-size: 10px;
+    justify-content: center;
+    height: 20px;
+}
+.not-active{
+        pointer-events: none; 
+        cursor: default; 
+
+}
