@@ -8,31 +8,38 @@ var letrasRepetidasErradas = [];
 var letrasRepetidasAcertadas = [];
 var palabras = ["kamiilla", "fioreella", "dayyana"];
 var intentos = 0;
-var arrarPosicionesExisten=[];
-var main= document.querySelector(".contenido");
+var arrarPosicionesExisten = [];
+var isPlaying = false;
 //FIN:declaración de variables
-function desactivar(){
-    main.classList.add("not-active");
-}
-desactivar();
+
 //INICIO: llamar al evento del boton
 var btnJugar = document.querySelector(".btnJugar");
-btnJugar.onclick = sortearPalabras;
+btnJugar.onclick = iniciarJuego;
 //FIN: llamar al evento del boton
+
+//INICIO: Función iniciarJuego
+function iniciarJuego() {
+    isPlaying = true;
+    sortearPalabras();
+    ingresarLetraTeclado();
+
+
+}
+//FIN: Función iniciarJuego
 
 //INICIO: funcion sortear palabra
 function sortearPalabras() {
     intentos = 0;
     letrasRepetidasAcertadas = [];
-    arrarPosicionesExisten=[];
-    letrasRepetidasErradas=[];
+    arrarPosicionesExisten = [];
+    letrasRepetidasErradas = [];
     dibujarCanvas();
-    var itemSeleccionado = Math.floor(Math.random(palabras) * palabras.length);
+    var palabraEscogida = Math.floor(Math.random(palabras) * palabras.length);
 
     for (var i = 0; i < palabras.length; i++) {
         var posocion = i;
-        if (posocion == itemSeleccionado) {
-            palabra = palabras[itemSeleccionado];
+        if (posocion == palabraEscogida) {
+            palabra = palabras[palabraEscogida];
         }
     }
 }
@@ -41,7 +48,6 @@ function sortearPalabras() {
 
 //INCIO: didujar canvas
 function dibujarCanvas() {
-    main.classList.remove("not-active");
     pantalla.focus();
     pincel.fillStyle = "green";
     pincel.fillRect(0, 0, 700, 400);
@@ -50,15 +56,23 @@ function dibujarCanvas() {
 //FIN: didujar canvas
 
 //INICIO: funcion keyup
-pantalla.addEventListener('keyup', function (event) {
-    event.preventDefault();
-    var codigoLetra = event.keyCode;
-    var letra=event.key;
-    var caracterValido = new RegExp('[A-Z]', 'i');
-    if(codigoLetra >= 65 && codigoLetra <= 95 && caracterValido.test(letra)){
-        dibujarLetras(letra, x);
-    }
-});
+function ingresarLetraTeclado() {
+
+    pantalla.addEventListener('keyup', function (event) {
+        if (isPlaying) {
+            event.preventDefault();
+            var codigoLetra = event.keyCode;
+            var letra = event.key;
+            var caracterValido = new RegExp('[A-Z]', 'i');
+            if (codigoLetra >= 65 && codigoLetra <= 95 && caracterValido.test(letra)) {
+                dibujarLetras(letra, x);
+            }
+        }
+    });
+
+
+}
+
 //FIN: funcion keyup
 
 //INICIO:verificar letrasRepetidasErradas
@@ -89,7 +103,7 @@ function dibujarLetras(letraIngresada, intervalo) {
                 pincel.fillStyle = "black";
                 pincel.font = "20px Verdana";
                 pincel.fillText("PERDISTE¡¡: FIN DEL JUEGO", 400, 80);
-                desactivar();
+                isPlaying = false;
 
             }
             return;
@@ -102,18 +116,6 @@ function dibujarLetras(letraIngresada, intervalo) {
 //INICIO: Dibujar las letras en el canvas
 function dibujarPalabraEnCanvas(posiciones) {
     var palabraSeleccionada = palabra.toUpperCase();
-    var contarLetras = contarLetrasRepetidasEnPalabraSeleccionda(palabraSeleccionada);
-    
-    // verificar si la letra de la palabra se repite
-    for (var element in contarLetras) {
-        var cantidad = contarLetras[element];
-        var letra = element;
-        if (cantidad > 1) {
-            console.log("cantidad:" + cantidad);
-            console.log("Letra:" + letra);
-        }
-    }
-
     for (var j = 0; j < posiciones.length; j++) {
         var xAcertadas = 150;
         // recorrer palabra elegida para ver en que psoisicion pintamos las letras en el canvas
@@ -121,8 +123,8 @@ function dibujarPalabraEnCanvas(posiciones) {
         for (var i = 0; i < palabraSeleccionada.length; i++) {
             var posisionExiste = i;
             var letraExiste = palabraSeleccionada[i];
-            if (posiciones[j] == posisionExiste
-                && !arrarPosicionesExisten.includes(posiciones[j])) {
+            if (posiciones[j] == posisionExiste &&
+                !arrarPosicionesExisten.includes(posiciones[j])) {
 
                 pincel.fillStyle = "black";
                 pincel.font = "30px Verdana";
@@ -139,25 +141,13 @@ function dibujarPalabraEnCanvas(posiciones) {
             pincel.fillStyle = "black";
             pincel.font = "30px Verdana";
             pincel.fillText("Usted Ganó", 350, 100);
-            desactivar();
+            isPlaying = false;
         }
     }
 
 }
 //FIN: Dibujar las letras en el canvas
 
-
-//INICIO: verificar cuantas veces se repite una letra en la plabra seleccionada
-function contarLetrasRepetidasEnPalabraSeleccionda(palabraSeleccionda) {
-    var caracteresagrupados = palabraSeleccionda.split("");
-    var contletras = {};
-    for (var i in caracteresagrupados) {
-        contletras[caracteresagrupados[i]] = (contletras[caracteresagrupados[i]] || 0) + 1;
-    }
-    return contletras;
-
-}
-//FIN: verificar cuantas veces se repite una letra en la plabra seleccionada
 
 
 //INICIO: Verificar si la letra ingresada por el usuario esta en la palabra sorteada
